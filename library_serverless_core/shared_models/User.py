@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 
 from ..persistence.database import Base
+from . import Role, Video
 
 
 class User(Base):

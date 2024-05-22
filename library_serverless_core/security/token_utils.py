@@ -4,7 +4,7 @@ import os
 import jwt
 import pytz
 
-from library_serverless_core.shared_models.User import User
+from ..shared_models.User import User
 
 secret = os.environ.get('JWT_KEY')
 tz = pytz.timezone('America/Bogota')
