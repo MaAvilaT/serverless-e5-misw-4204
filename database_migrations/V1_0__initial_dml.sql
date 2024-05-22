@@ -4,7 +4,7 @@ CREATE TABLE roles
     role_name   VARCHAR(100) NOT NULL,
     description VARCHAR(255) DEFAULT '',
 
-    primary key (id)
+    PRIMARY KEY (id)
 );
 
 
