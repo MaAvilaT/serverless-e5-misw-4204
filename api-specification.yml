@@ -1,0 +1,32 @@
+swagger: "2.0"
+info:
+  title: serverless-api-e5
+  version: 1.0.0
+schemes:
+  - https
+produces:
+  - application/json
+paths:
+  /serverless/sync/createUser:
+    post:
+      x-google-backend:
+        address: https://us-central1-misw-4204-nube.cloudfunctions.net/create-user-fn-g2
+      operationId: "createUser"
+      summary: creates a new user
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Request payload
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+      responses:
+        "201":
+          description: user created
+          schema:
+            type: string
