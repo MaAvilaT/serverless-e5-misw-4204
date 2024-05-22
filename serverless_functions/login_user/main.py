@@ -14,7 +14,7 @@ tz = pytz.timezone('America/Bogota')
 
 
 @functions_framework.http
-def login(request):
+def login_user(request):
     username = request.json['username']
     password = request.json['password']
 
