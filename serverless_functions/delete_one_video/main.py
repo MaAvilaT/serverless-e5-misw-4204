@@ -5,11 +5,11 @@ from google.cloud import storage
 from flask import jsonify
 
 from library_serverless_core.persistence.database import open_session
-from library_serverless_core.security.token_utils import verify_token, decode_token
+from library_serverless_core.security.token_utils import decode_token
 from library_serverless_core.shared_models.Video import Video
 
-BUCKET_NAME: str = os.environ.get('DRONE_BUCKET', 'msvc-drone-bucket')
-PATH_TO_VIDEOS: str = os.environ.get('DRONE_PATH_TO_VIDEOS', 'videos')
+BUCKET_NAME: str = os.environ.get('DRONE_BUCKET')
+PATH_TO_VIDEOS: str = os.environ.get('DRONE_PATH_TO_VIDEOS')
 
 
 @functions_framework.http
@@ -17,11 +17,12 @@ def delete_one_video(request):
     if request.method != 'DELETE':
         return jsonify(''), 404
 
-    if not verify_token(request):
+    payload = decode_token(request.headers['Pascal'])
+    if not payload:
         return jsonify(''), 505
 
     video_id = request.args.get('video-id')
-    user_id = decode_token(request.headers)['user_id']
+    user_id = payload['user_id']
 
     with open_session() as session:
         video = session.query(Video).filter(Video.id == video_id).first()
@@ -29,15 +30,15 @@ def delete_one_video(request):
         if video is None:
             return jsonify({'message': 'Invalid task id'}), 401
 
-        if video.status.name is 'uploaded':
+        if video.status.name == 'uploaded':
             return jsonify({'message': 'Video is being processed, cannot delete it'})
 
-        if video.user_id is not user_id:
+        if video.user_id != user_id:
             return jsonify(''), 404
 
         storage_client = storage.Client()
         bucket = storage_client.bucket(BUCKET_NAME)
-        edited_video = bucket.blob(f'{PATH_TO_VIDEOS}/{video.path}')
+        edited_video = bucket.blob(f'{PATH_TO_VIDEOS}/{video.path.split("/")[-1]}')
         original_video = bucket.blob(f'{PATH_TO_VIDEOS}/{video.video_id}')
 
         edited_video.delete()
@@ -45,4 +46,4 @@ def delete_one_video(request):
 
         session.delete(video)
         session.commit()
-        return jsonify({'message': 'Invalid task id'}), 200
+        return jsonify({'message': f'Video deleted successfully `{video.video_id}`'}), 200

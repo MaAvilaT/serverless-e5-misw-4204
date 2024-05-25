@@ -35,9 +35,7 @@ def verify_token(encoded_token):
     return None
 
 
-def decode_token(headers):
-    authorization = headers['Authorization']
-    encoded_token = authorization.split(" ")[1]
+def decode_token(encoded_token):
     try:
         payload = jwt.decode(encoded_token, secret, algorithms=["HS256"])
         return payload

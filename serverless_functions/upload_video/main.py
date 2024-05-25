@@ -26,7 +26,7 @@ def upload_video(request: Request):
     if request.method != 'POST':
         return jsonify(''), 404
 
-    payload = verify_token(request.values['token'])
+    payload = verify_token(request.headers['Pascal'])
     if not payload:
         return jsonify(''), 505
 

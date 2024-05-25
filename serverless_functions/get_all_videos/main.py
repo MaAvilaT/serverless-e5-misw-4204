@@ -2,7 +2,7 @@ import functions_framework
 from flask import jsonify
 
 from library_serverless_core.persistence.database import open_session
-from library_serverless_core.security.token_utils import verify_token, decode_token
+from library_serverless_core.security.token_utils import decode_token
 from library_serverless_core.shared_models.Video import Video, VideoStatus
 
 
@@ -11,10 +11,11 @@ def get_all_videos(request):
     if request.method != 'GET':
         return jsonify(''), 404
 
-    if not verify_token(request):
+    payload = decode_token(request.headers['Pascal'])
+    if not payload:
         return jsonify(''), 505
 
-    user_id = decode_token(request)['user_id']
+    user_id = payload['user_id']
 
     order = request.args.get('order')
     lim = request.args.get('max')
