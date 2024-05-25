@@ -3,6 +3,9 @@
 ## Description
 This is the 5th project for MISW 4204 Uniandes - 2024-02
 
+## Deploy a gateway
+Create an API specification file in Swagger Open API 2.0 syntax and deploy it.
+
 ## Deploy functions
 
 **Important**: To deploy any function, you must copy the library_serverless_core library folder inside the
