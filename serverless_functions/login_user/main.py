@@ -15,6 +15,9 @@ tz = pytz.timezone('America/Bogota')
 
 @functions_framework.http
 def login_user(request):
+    if request.method != 'POST':
+        return jsonify(''), 404
+
     username = request.json['username']
     password = request.json['password']
 
@@ -30,6 +33,6 @@ def login_user(request):
                 'token': generate_token(valid_user)
             }), 200
 
-        return jsonify({
-            'message': 'Invalid credentials'
-        }), 401
+    return jsonify({
+        'message': 'Invalid credentials'
+    }), 401

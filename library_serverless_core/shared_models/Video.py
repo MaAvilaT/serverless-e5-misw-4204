@@ -6,11 +6,12 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 
 from ..persistence.database import Base
+from . import User
 
 
 class VideoStatus(enum.Enum):
-    processed = "processed"
-    uploaded = "uploaded"
+    processed: str = "processed"
+    uploaded: str = "uploaded"
 
 
 class Video(Base):

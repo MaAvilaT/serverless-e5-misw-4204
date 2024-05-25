@@ -13,6 +13,9 @@ logger = logging.Logger(level=logging.INFO, name='access.log')
 
 @functions_framework.http
 def create_user(request):
+    if request.method != 'POST':
+        return jsonify(''), 404
+
     role = request.json['role']
     email = request.json['email']
 
@@ -34,7 +37,6 @@ def create_user(request):
             new_user.role = role
             session.add(new_user)
             session.commit()
-            session.close()
             return jsonify({
                 'success': True,
             }), 201

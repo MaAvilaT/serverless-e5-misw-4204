@@ -24,24 +24,15 @@ def generate_token(authenticated_user: User):
     return jwt.encode(payload, secret, algorithm="HS256")
 
 
-def verify_token(headers):
-    if 'Authorization' in headers.keys():
-        authorization = headers['Authorization']
-        encoded_token = authorization.split(" ")[1]
+def verify_token(encoded_token):
+    if len(encoded_token) > 0:
+        try:
+            payload = jwt.decode(encoded_token, secret, algorithms=["HS256"])
+            return payload
+        except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError):
+            return None
 
-        if len(encoded_token) > 0:
-            try:
-                payload = jwt.decode(encoded_token, secret, algorithms=["HS256"])
-                roles = list(payload['roles'])
-
-                if 'PARTICIPANT' in roles:
-                    return True
-
-                return False
-            except (jwt.ExpiredSignatureError, jwt.InvalidSignatureError):
-                return False
-
-        return False
+    return None
 
 
 def decode_token(headers):
