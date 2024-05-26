@@ -68,7 +68,7 @@ def upload_video(request: Request):
         'success': True,
         'video_id': video_name,
         'status': VideoStatus.uploaded.name
-    }), 505
+    }), 200
 
 
 if __name__ == '__main__':
